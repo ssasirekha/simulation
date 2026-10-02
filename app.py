@@ -1,4 +1,131 @@
-import streamlit as st
+
+    n = sum(safeguards.values())
+    risk = "HIGH" if n <= 2 else ("MEDIUM" if n <= 5 else "CONTROLLED")
+    accountability = "Defined" if safeguards["Human oversight"] and safeguards["Continuous monitoring"] else "Unclear"
+    explainability = "High" if safeguards["Explainability"] else "Low"
+    privacy = "Lower" if safeguards["Privacy protection"] else "High"
+    fairness = "Reviewed" if safeguards["Fairness testing"] else "Not assessed"
+
+    st.markdown("### Responsible AI Dashboard")
+    dash = pd.DataFrame({
+        "Indicator": ["Technical accuracy", "Fairness risk", "Privacy risk", "Explainability", "Accountability", "Overall governance risk"],
+        "Status": ["94% (illustrative)", fairness, privacy, explainability, accountability, risk]
+    })
+    st.dataframe(dash, hide_index=True, use_container_width=True)
+
+    if st.button("Evaluate deployment readiness", key="ethics_eval"):
+        complete("ethics")
+        if n == 7:
+            st.success("All seven safeguards have been considered before deployment.")
+        elif n >= 5:
+            st.warning("Several safeguards are present, but review the controls that remain disabled.")
+        else:
+            st.error("Important Responsible AI safeguards are still missing.")
+
+        st.markdown("### Ethics-by-Design")
+        st.write(
+            "Ethical risks should be considered while defining the problem, selecting data, developing the model, "
+            "testing, deploying and monitoring—not added only after harm occurs."
+        )
+
+    st.info("**Central message:** The most accurate AI system is not necessarily the most responsible AI system.")
+
+# ---------- REFLECTION ----------
+with tabs[6]:
+    st.header("Final Reflection — Move from 'Can We?' to 'Should We?'")
+    st.markdown("""
+### Before deploying an AI system, ask:
+
+**CAN we build it?**  
+↓  
+**SHOULD we build it?**  
+↓  
+**Who could be affected?**  
+↓  
+**Could it create unfair outcomes?**  
+↓  
+**How will privacy and human rights be protected?**  
+↓  
+**Can important decisions be explained?**  
+↓  
+**Who is accountable?**  
+↓  
+**Where is human oversight needed?**
+""")
+
+    st.markdown("---")
+    st.subheader("Quick knowledge check")
+
+    q1 = st.radio(
+        "1. Why can AI produce discriminatory outcomes even without intentional bias?",
+        [
+            "Select an answer",
+            "Because AI always makes random decisions",
+            "Because training data may contain historical or societal bias",
+            "Because accuracy automatically creates discrimination"
+        ],
+        key="q1"
+    )
+    q2 = st.radio(
+        "2. What is the black-box problem?",
+        [
+            "Select an answer",
+            "The difficulty of understanding how a complex model reached a decision",
+            "A computer hardware failure",
+            "A method for encrypting training data"
+        ],
+        key="q2"
+    )
+    q3 = st.radio(
+        "3. What does Ethics-by-Design mean?",
+        [
+            "Select an answer",
+            "Adding ethics only after deployment",
+            "Avoiding AI in all high-impact applications",
+            "Incorporating ethical considerations throughout the AI lifecycle"
+        ],
+        key="q3"
+    )
+
+    if st.button("Submit knowledge check"):
+        correct = 0
+        correct += q1 == "Because training data may contain historical or societal bias"
+        correct += q2 == "The difficulty of understanding how a complex model reached a decision"
+        correct += q3 == "Incorporating ethical considerations throughout the AI lifecycle"
+        st.metric("Knowledge-check score", f"{correct}/3")
+        if correct == 3:
+            st.success("Excellent. You identified the core Responsible AI concepts.")
+        else:
+            st.info("Review the case studies and try again. Focus on bias, explainability and Ethics-by-Design.")
+
+    st.markdown("---")
+    st.subheader("Your Responsible AI Decision")
+    reflection = st.text_area(
+        "In 2–3 sentences, explain what you would check before deploying an AI system that affects people."
+    )
+    if reflection:
+        st.success("Reflection recorded for this session.")
+
+    st.markdown("### Take-away")
+    st.success(
+        "Responsible AI is not about preventing innovation. It is about ensuring that innovation happens responsibly—"
+        "with fairness, transparency, privacy, accountability, safety, human oversight, and attention to wider social impact."
+    )
+
+st.sidebar.title("Responsible AI")
+st.sidebar.metric("Activities completed", f"{len(st.session_state.completed)}/6")
+st.sidebar.metric("Participation points", st.session_state.score)
+st.sidebar.markdown("---")
+st.sidebar.markdown("""
+**Simulation pathway**
+
+1. Fairness & Bias  
+2. Transparency & Explainability  
+3. Privacy & Data Governance  
+4. Safety & Human Oversight  
+5. Responsible GenAI Use  
+6. Ethics-by-Design
+""")import streamlit as st
 import pandas as pd
 
 st.set_page_config(page_title="Responsible AI Decision Lab", page_icon="⚖️", layout="wide")
